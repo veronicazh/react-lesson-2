@@ -1,6 +1,7 @@
 import React from 'react'
 import './App.css';
 import TodoItem from './components/TodoItem'
+import Form from './components/Form'
 
 
 class App extends React.Component {
@@ -48,14 +49,14 @@ class App extends React.Component {
               isCompleted={item.isCompleted}
               onItemClick={this.onItemClick}
               onIconClick={this.onIconClick}
-              key={item.id}
-              />})
+              key={item.id}/>})
           } 
         </ul>
-        <form onSubmit={this.onFormSubmit}>
-          <input value={this.state.inputValue} onChange={this.onInputChange}/>
-          <button className='addButton' type='submit'>Add</button>
-        </form>
+        <Form 
+          onSubmit={this.onFormSubmit} 
+          onChange={this.onInputChange} 
+          inputValue={this.state.inputValue}
+        />
       </div>
     )
   }
