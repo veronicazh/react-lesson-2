@@ -1,25 +1,64 @@
-import logo from './logo.svg';
+import React from 'react'
 import './App.css';
+import TodoItem from './components/TodoItem'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component {
+
+  state = {
+    todos: [],
+    inputValue: ''
+  }
+
+  onInputChange = (e) => {
+    this.setState({ inputValue: e.target.value })
+  }
+
+  onFormSubmit = (e) => {
+    e.preventDefault()
+    this.setState({todos: [...this.state.todos, {title: this.state.inputValue, id: Math.random(), isCompleted: false},]})
+    this.setState({inputValue: ''})
+  }
+
+  onItemClick = (id) => {
+    let stringArray = JSON.stringify(this.state.todos)
+    let deepArrayCopy = JSON.parse(stringArray)
+    const clickedElementIndex = deepArrayCopy.findIndex((el) => el.id === id)
+    deepArrayCopy[clickedElementIndex].isCompleted = !deepArrayCopy[clickedElementIndex].isCompleted
+    this.setState({todos: deepArrayCopy})
+  }
+
+  onIconClick = (id) => {
+    let stringArray = JSON.stringify(this.state.todos)
+    let deepArrayCopy = JSON.parse(stringArray)
+    const clickedElementIndex = deepArrayCopy.findIndex((el) => el.id === id)
+    deepArrayCopy.splice(clickedElementIndex, 1)
+    this.setState({todos: deepArrayCopy })
+  }
+
+  render () {
+    return (
+      <div className='root'>
+        <span className='mainTitle'>Todo List</span>
+        <ul>
+          {this.state.todos.map((item) => {
+            return <TodoItem 
+              item={item} 
+              id={item.id}
+              isCompleted={item.isCompleted}
+              onItemClick={this.onItemClick}
+              onIconClick={this.onIconClick}
+              key={item.id}
+              />})
+          } 
+        </ul>
+        <form onSubmit={this.onFormSubmit}>
+          <input value={this.state.inputValue} onChange={this.onInputChange}/>
+          <button className='addButton' type='submit'>Add</button>
+        </form>
+      </div>
+    )
+  }
 }
 
 export default App;
